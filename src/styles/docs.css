@@ -4,8 +4,8 @@
 
 /* -------------------------------------------------------------------------
    Map Starlight onto the Vizier design tokens.
-   The token values switch under :root[data-theme="dark"], so the docs follow
-   the same theme as the rest of the site without a second palette.
+   The site is dark only: the docs render under :root[data-theme="dark"] too,
+   on the same tokens, with no second palette.
    ---------------------------------------------------------------------- */
 
 :root,

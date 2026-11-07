@@ -1,107 +1,65 @@
 ---
 import { Image } from "astro:assets";
-import identityDark from "../../assets/shots/identity-dark.png";
-import identityLight from "../../assets/shots/identity-light.png";
-import memoryDark from "../../assets/shots/memory-dark.png";
-import memoryLight from "../../assets/shots/memory-light.png";
-import tasksDark from "../../assets/shots/tasks-dark.png";
-import tasksLight from "../../assets/shots/tasks-light.png";
+import memory from "../../assets/shots/memory.png";
+import tasks from "../../assets/shots/tasks.png";
+import workspace from "../../assets/shots/workspace.png";
 import { url } from "../../lib/site";
 
-const panels = [
+const sections = [
+  {
+    id: "workspace",
+    label: "Workspace",
+    title: "Bring every agent into the room.",
+    body: "A Workspace is a shared space for your people and your agents, with topics. Agents read along without spending a token, and answer only when someone mentions them. Each brings its own memory and tools, so one can find the place and another can check it against the budget, in the same thread.",
+    // The released docs do not have this page yet: back to /docs/configuration/workspaces/ once they do.
+    link: { label: "About Workspaces", href: "https://github.com/vizier-lab/vizier/blob/develop/docs/src/configuration/workspaces.md" },
+    image: workspace,
+    alt: "A Workspace topic called road-trip. Dorothy asks where to stop for lunch. Oz mentions @toto, who recommends a place, then mentions @tin, who checks the cost against the money set aside for the drive.",
+  },
   {
     id: "memory",
     label: "Memory",
     title: "See how the reasoning connects.",
     body: "Memory is a graph of what the agent actually wrote: each document a node, each link between two thoughts an edge, the largest nodes the ones it returns to. Open any node and you get the passage itself — which lines, and whether a person, a conversation or the nightly reflection wrote it. If it is wrong, fix the source and the next answer uses the fix.",
     link: { label: "How memory works", href: url("/docs/configuration/memory/") },
-    light: memoryLight,
-    dark: memoryDark,
-    alt: "The Memory page for one agent: its court bundle drawn as a link graph of eight documents, the Harvest Festival ledger the largest node, beside the document tree and its tags.",
-  },
-  {
-    id: "identity",
-    label: "Identity",
-    title: "Watch the self change.",
-    body: "CORE.md is the agent's own document: how it speaks, what it is for, and what it has learned. It revises that document as it works, and every version records who wrote it and why. Character becomes something you audit rather than guess at.",
-    link: { label: "About CORE.md", href: url("/docs/configuration/agents/#coremd") },
-    light: identityLight,
-    dark: identityDark,
-    alt: "The Core page for one agent: its CORE.md text beside a History panel with seven revisions, attributed to the dream cycle, to Seneschal in a conversation, to majesty in the WebUI, and to the first version.",
+    image: memory,
+    alt: "The Memory page for an agent called Tin: its summer-trip bundle drawn as a link graph of its documents, such as Who Paid What and The Cabin, beside the document tree.",
   },
   {
     id: "work",
     label: "Scheduled work",
     title: "See what it did without you.",
-    body: "The agent proposes and runs its own follow-ups: a ledger review, a nudge before a renewal, a check-in the day before an event. Each task records who asked, when it next runs and whether the last run answered; the answer itself is kept with the run, so unattended work never disappears into a log.",
+    body: "Ask once and the agent schedules the follow-ups itself: a Sunday summary, a nudge about a balance, a budget check the day before you leave. Each task records who asked, when it next runs and whether the last run answered; the answer itself is kept with the run, so unattended work never disappears into a log.",
     link: { label: "Scheduled tasks", href: url("/docs/configuration/agents/#tasks") },
-    light: tasksLight,
-    dark: tasksDark,
-    alt: "The Tasks page for one agent: eleven scheduled tasks, each with its next run and requester, most marked as requested by Seneschal itself and three by Your Majesty.",
+    image: tasks,
+    alt: "The Schedule page for an agent called Tin, as a table of four tasks it set up when Oz asked, each with its schedule, requester and latest run.",
   },
 ];
 ---
 
-<section class="section inside" id="inside">
-  <div class="shell">
-    <div class="section-head">
-      <div class="section-head__copy">
-        <h2 class="display-lg">Inspect everything it knows.</h2>
+{sections.map((section) => (
+  <section class="section evidence" id={section.id}>
+    <div class="shell">
+      <div class="section-head">
+        <div class="section-head__copy">
+          <p class="mono evidence__label">{section.label}</p>
+          <h2 class="display-lg">{section.title}</h2>
+        </div>
+        <div class="section-head__aside">
+          <p class="body-copy">{section.body}</p>
+          <a class="mono section-head__link" href={section.link.href}>{section.link.label} →</a>
+        </div>
       </div>
-      <p class="body-copy section-head__note">
-        Most assistants show you a reply and nothing else. Vizier shows the memory
-        it drew on, the self it maintains, the work it scheduled and what it cost.
-        You cannot trust what you cannot check.
-      </p>
-    </div>
-
-    <div class="tabs inside__tabs">
-      {panels.map((panel, index) => (
-        <input
-          type="radio"
-          name="inside"
-          id={`inside-${panel.id}`}
-          checked={index === 0}
+      <div class="shot__frame">
+        <Image
+          class="shot__img"
+          src={section.image}
+          alt={section.alt}
+          widths={[720, 1080, 1440, 2160]}
+          sizes="(max-width: 860px) 100vw, 1240px"
+          loading="lazy"
         />
-      ))}
-
-      <div class="tabs__labels">
-        {panels.map((panel) => (
-          <label for={`inside-${panel.id}`}>{panel.label}</label>
-        ))}
-      </div>
-
-      <div class="tabs__panels">
-        {panels.map((panel) => (
-          <div class="tabs__panel inside__panel">
-            <div class="inside__copy">
-              <div>
-                <h3>{panel.title}</h3>
-                <p>{panel.body}</p>
-              </div>
-              <a class="mono inside__link" href={panel.link.href}>{panel.link.label} →</a>
-            </div>
-            <div class="inside__shot">
-              <Image
-                class="shot__img shot__img--light"
-                src={panel.light}
-                alt={panel.alt}
-                widths={[720, 1080, 1440, 2160]}
-                sizes="(max-width: 860px) 100vw, 1240px"
-                loading="lazy"
-              />
-              <Image
-                class="shot__img shot__img--dark"
-                src={panel.dark}
-                alt={panel.alt}
-                widths={[720, 1080, 1440, 2160]}
-                sizes="(max-width: 860px) 100vw, 1240px"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        ))}
       </div>
     </div>
-  </div>
-</section>
+  </section>
+))}

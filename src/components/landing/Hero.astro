@@ -1,10 +1,8 @@
 ---
-import { Image } from "astro:assets";
-import chatDark from "../../assets/shots/chat-dark.png";
-import chatLight from "../../assets/shots/chat-light.png";
-import chatMobileDark from "../../assets/shots/chat-mobile-dark.png";
-import chatMobileLight from "../../assets/shots/chat-mobile-light.png";
-import { installCommand, repoUrl } from "../../lib/site";
+import { appDownloads, latestAppVersion } from "../../lib/release";
+import { installCommand, repoUrl, url } from "../../lib/site";
+
+const downloads = appDownloads(await latestAppVersion());
 ---
 
 <section class="hero">
@@ -23,12 +21,27 @@ import { installCommand, repoUrl } from "../../lib/site";
       </p>
 
       <div class="hero__actions reveal reveal-3">
-        <a class="btn btn-primary" href="#install">Install Vizier</a>
-        <a class="btn btn-secondary" href="#inside">See what it remembers</a>
+        <a
+          class="btn btn-primary"
+          id="hero-download"
+          href="#install"
+          data-windows={downloads.windows}
+          data-macos={downloads.macos}
+          data-linux-x64={downloads.linuxX64}
+          data-linux-arm64={downloads.linuxArm64}
+        >
+          Install Vizier
+        </a>
+        <a class="btn btn-secondary" href="#why">See how it works</a>
         <a class="hero__gh-link mono" href={repoUrl} target="_blank" rel="noopener noreferrer">
           GitHub ↗
         </a>
       </div>
+
+      <p class="hero__download-note mono" id="hero-download-note" hidden>
+        <span id="hero-download-platform"></span> · Not code-signed yet ·{" "}
+        <a href={url("/docs/getting-started/desktop-app/")}>Other platforms and setup →</a>
+      </p>
 
       <div class="install-line reveal reveal-4">
         <code id="install-command">{installCommand}</code>
@@ -39,53 +52,76 @@ import { installCommand, repoUrl } from "../../lib/site";
     <div class="hero__shot reveal reveal-3">
       <figure class="shot">
         <div class="shot__frame">
-          <div class="shot__bar">
-            <span class="live-dot"></span>
-            <span class="shot__url">localhost:9999</span>
-            <span class="shot__tag">self-hosted</span>
-          </div>
-          <Image
-            class="shot__img shot__img--light"
-            src={chatLight}
-            alt="Vizier's WebUI showing a conversation with an agent called Seneschal. Asked for one sentence before a deadline, the agent answers with the tent deposit it needs approved, and the turn shows six script runs, nineteen recalled memory passages, and a cost under one cent."
-            widths={[720, 1080, 1440, 2160]}
-            sizes="(max-width: 860px) 100vw, 1144px"
-            loading="eager"
-            fetchpriority="high"
-          />
-          <Image
-            class="shot__img shot__img--dark"
-            src={chatDark}
-            alt="Vizier's WebUI in dark mode, showing the same turn: the agent's one-sentence answer, six script runs, nineteen recalled memory passages and the turn's cost."
-            widths={[720, 1080, 1440, 2160]}
-            sizes="(max-width: 860px) 100vw, 1144px"
-            loading="eager"
-          />
-          <Image
-            class="shot__img shot__img--mobile shot__img--mobile-light"
-            src={chatMobileLight}
-            alt="Vizier's WebUI at phone size, showing the same conversation: the question, the turn's receipt of six script runs and nineteen recalled passages, and the agent's one-sentence answer."
-            widths={[390, 780]}
-            sizes="(max-width: 720px) 100vw, 1px"
-            loading="lazy"
-          />
-          <Image
-            class="shot__img shot__img--mobile shot__img--mobile-dark"
-            src={chatMobileDark}
-            alt="Vizier's WebUI at phone size in dark mode, showing the same conversation and turn receipt."
-            widths={[390, 780]}
-            sizes="(max-width: 720px) 100vw, 1px"
-            loading="lazy"
-          />
+          <video
+            id="hero-video"
+            class="shot__video"
+            src={url("/media/vizier-launch.mp4")}
+            poster={url("/media/vizier-launch.jpg")}
+            width="1920"
+            height="1080"
+            playsinline
+            controls
+            preload="none"
+            aria-label="Vizier's launch video. Own your intelligence: memory as plain markdown on your disk, a Workspace where people and agents share one room, and a desktop app or a server, your call."
+          >
+            <a href={url("/media/vizier-launch.mp4")}>Watch the Vizier launch video</a>
+          </video>
         </div>
         <figcaption class="shot__caption">
-          <span>
-            A real turn from a demo instance: nineteen passages recalled from
-            memory, six script runs, less than a cent.
-          </span>
-          <span class="mono">Seneschal · WebUI</span>
+          <span>Real screens from a demo instance.</span>
+          <span class="mono">Vizier · 20s</span>
         </figcaption>
       </figure>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  // Offers the installer for the visitor's OS. Phones, tablets and anything
+  // unrecognised keep "Install Vizier": the desktop app does not run there.
+  (() => {
+    const button = document.getElementById("hero-download");
+    const note = document.getElementById("hero-download-note");
+    const platformLabel = document.getElementById("hero-download-platform");
+    if (!button || !note || !platformLabel) return;
+
+    const nav = navigator;
+    const ua = nav.userAgent;
+    const hint = nav.userAgentData;
+    const platform = (hint && hint.platform) || nav.platform || "";
+    const os = platform + " " + ua;
+    if (
+      (hint && hint.mobile) ||
+      /Android|iPhone|iPad|iPod|CrOS/i.test(ua) ||
+      (/Mac/i.test(os) && nav.maxTouchPoints > 1)
+    ) {
+      return;
+    }
+
+    const offer = (name, href, label) => {
+      button.textContent = "Download for " + name;
+      button.href = href;
+      platformLabel.textContent = label;
+      note.hidden = false;
+    };
+    const links = button.dataset;
+
+    if (/Win/i.test(os)) {
+      offer("Windows", links.windows, "Windows 10/11, x64");
+    } else if (/Mac/i.test(os)) {
+      offer("macOS", links.macos, "macOS 11+, Apple Silicon and Intel");
+    } else if (/Linux|X11/i.test(os)) {
+      const arm = () => offer("Linux", links.linuxArm64, "Linux arm64 AppImage");
+      offer("Linux", links.linuxX64, "Linux x86_64 AppImage");
+      if (/aarch64|arm64/i.test(os)) arm();
+      else if (hint && hint.getHighEntropyValues) {
+        hint
+          .getHighEntropyValues(["architecture"])
+          .then((values) => {
+            if (values.architecture === "arm") arm();
+          })
+          .catch(() => {});
+      }
+    }
+  })();
+</script>
