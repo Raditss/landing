@@ -26,6 +26,10 @@ export const sidebar = [
       {
         "label": "Building from Source",
         "link": "/docs/getting-started/contributing/"
+      },
+      {
+        "label": "Desktop App",
+        "link": "/docs/getting-started/desktop-app/"
       }
     ]
   },
@@ -83,6 +87,42 @@ export const sidebar = [
       {
         "label": "Agent Secrets",
         "link": "/docs/configuration/secrets/"
+      },
+      {
+        "label": "Encryption at Rest",
+        "link": "/docs/configuration/encryption/"
+      },
+      {
+        "label": "Artifacts",
+        "link": "/docs/configuration/artifacts/"
+      },
+      {
+        "label": "Office Addon",
+        "link": "/docs/configuration/office-addon/"
+      },
+      {
+        "label": "Desktop Web Access",
+        "link": "/docs/configuration/desktop-web-access/"
+      },
+      {
+        "label": "Asking the Person",
+        "link": "/docs/configuration/questions/"
+      },
+      {
+        "label": "Build Flavours",
+        "link": "/docs/configuration/build-flavours/"
+      },
+      {
+        "label": "Color Themes",
+        "link": "/docs/configuration/themes/"
+      },
+      {
+        "label": "Time",
+        "link": "/docs/configuration/time/"
+      },
+      {
+        "label": "Workspaces",
+        "link": "/docs/configuration/workspaces/"
       }
     ]
   },
@@ -104,6 +144,28 @@ export const sidebar = [
       {
         "label": "Examples",
         "link": "/docs/api-integration/examples/"
+      },
+      {
+        "label": "Building on vizier-core",
+        "link": "/docs/api-integration/building-on-vizier-core/"
+      }
+    ]
+  },
+  {
+    "label": "Deployment",
+    "items": [
+      {
+        "label": "Kubernetes",
+        "link": "/docs/deployment/kubernetes/"
+      }
+    ]
+  },
+  {
+    "label": "Fleet",
+    "items": [
+      {
+        "label": "Bus Contract",
+        "link": "/docs/fleet/bus-contract/"
       }
     ]
   }
