@@ -25,6 +25,9 @@ export default defineConfig({
       favicon: "/favicon.svg",
       components: {
         SiteTitle: "./src/components/site/DocsSiteTitle.astro",
+        // Dark only: no stored or system theme, and no picker.
+        ThemeProvider: "./src/components/site/DocsNoTheme.astro",
+        ThemeSelect: "./src/components/site/DocsNoTheme.astro",
       },
       social: [
         {

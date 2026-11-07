@@ -144,8 +144,9 @@ The same build works at `https://vizier-lab.github.io/landing/` and at
 - Design tokens and components: imported from `design/` as
   `@vizier/design`, exactly as the WebUI does.
 - Landing screenshots: `src/assets/shots/`, captured from a throwaway Vizier
-  instance with demo data. Every shot has a light and a dark variant; the site
-  swaps them with the theme. Replace both when the WebUI changes.
+  instance with demo data, dark theme only (the site is dark only). Replace them
+  when the WebUI changes.
+- Hero video: `public/media/vizier-launch.mp4`, with its poster beside it.
 - `public/og.png` is generated from `scripts/make-og.mjs`.
 
 The site has no analytics, comments, or runtime API calls. Everything is static.

@@ -18,7 +18,7 @@ const ogImage = image ?? (Astro.site ? new URL(url("/og.png"), Astro.site) : und
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,6 +26,7 @@ const ogImage = image ?? (Astro.site ? new URL(url("/og.png"), Astro.site) : und
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={url("/favicon.svg")} />
+    <meta name="color-scheme" content="dark" />
     <meta name="generator" content={Astro.generator} />
     {noindex && <meta name="robots" content="noindex" />}
 
@@ -43,19 +44,6 @@ const ogImage = image ?? (Astro.site ? new URL(url("/og.png"), Astro.site) : und
 
     <link rel="alternate" type="application/rss+xml" title="Vizier Blog" href={url("/rss.xml")} />
 
-    <script is:inline>
-      (() => {
-        try {
-          const stored = localStorage.getItem("starlight-theme");
-          const dark =
-            stored === "dark" ||
-            (stored !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-          document.documentElement.dataset.theme = dark ? "dark" : "light";
-        } catch {
-          document.documentElement.dataset.theme = "light";
-        }
-      })();
-    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
